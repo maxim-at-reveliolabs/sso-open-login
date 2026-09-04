@@ -1,0 +1,11 @@
+/sso-auto-login
+camoufox-profile/
+coverage.out
+coverage.html
+*.test
+*.prof
+.env
+.env.local
+.idea/
+.vscode/
+*.swp

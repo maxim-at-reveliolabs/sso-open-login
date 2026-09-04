@@ -1,0 +1,16 @@
+[Unit]
+Description=sso-auto-login
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=@DIR@
+ExecStart=@DIR@/sso-auto-login
+EnvironmentFile=@DIR@/.env
+Restart=on-failure
+RestartSec=5
+StartLimitBurst=5
+StartLimitIntervalSec=60
+
+[Install]
+WantedBy=default.target
