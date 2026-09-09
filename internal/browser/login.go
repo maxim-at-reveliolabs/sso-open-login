@@ -57,9 +57,9 @@ func fillOkta(ctx context.Context, page playwright.Page, cfg config.Config) erro
 		slog.Error("okta totp failed")
 		return fmt.Errorf("totp: %w", err)
 	}
-	totpBox := page.Locator(`[name="answer"], [name="passcode"], [name="credentials.passcode"]`)
-	if err := totpBox.First().Fill(code, playwright.LocatorFillOptions{Timeout: ms(15 * time.Second)}); err == nil {
-		_ = clickOktaSubmit(page)
+	box := page.GetByLabel("Enter code")
+	if err := box.PressSequentially(code, playwright.LocatorPressSequentiallyOptions{Timeout: ms(15 * time.Second)}); err == nil {
+		_ = namedButton(page, "Verify").Click(playwright.LocatorClickOptions{Timeout: ms(4 * time.Second)})
 	}
 	if n, _ := page.Locator(`input[name="SAMLResponse"]`).Count(); n > 0 {
 		_, _ = page.Evaluate(`() => { const el = document.querySelector('input[name="SAMLResponse"]'); if (el && el.form) el.form.submit(); }`)
@@ -68,6 +68,9 @@ func fillOkta(ctx context.Context, page playwright.Page, cfg config.Config) erro
 }
 
 func clickOktaSubmit(page playwright.Page) error {
+	if n, _ := page.GetByLabel("Enter code").Count(); n > 0 {
+		return nil
+	}
 	loc := page.Locator(`#okta-signin-submit, [data-type="save"], button[type="submit"]`)
 	return loc.First().Click(playwright.LocatorClickOptions{Timeout: ms(4 * time.Second)})
 }

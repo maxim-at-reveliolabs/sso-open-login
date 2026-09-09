@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Verify with Google Authenticator</title></head>
+<body>
+  <form id="f" action="/ok" method="GET">
+    <label for="otp">Enter code</label>
+    <input id="otp" name="credentials.passcode">
+    <button type="submit" onclick="if (!this.hasAttribute('data-first')) this.setAttribute('data-first', document.getElementById('otp').value); event.preventDefault();">Verify</button>
+  </form>
+</body>
+</html>
