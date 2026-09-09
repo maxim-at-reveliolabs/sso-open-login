@@ -37,7 +37,7 @@ func fillOkta(ctx context.Context, page playwright.Page, cfg config.Config) erro
 		return nil
 	}
 	user := page.Locator(`#okta-signin-username, [name="identifier"]`)
-	aws := namedButton(page, "Confirm and continue").Or(namedButton(page, "Allow access"))
+	aws := namedButton(page, "Confirm and continue").Or(namedButton(page, "Allow")).Or(namedButton(page, "Allow access"))
 	if err := user.Or(aws).WaitFor(playwright.LocatorWaitForOptions{Timeout: ms(12 * time.Second)}); err != nil {
 		return nil
 	}

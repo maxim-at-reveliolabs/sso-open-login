@@ -24,7 +24,7 @@ func clickAWS(ctx context.Context, page playwright.Page, wait time.Duration) err
 		return err
 	}
 	confirm := namedButton(page, "Confirm and continue")
-	allow := namedButton(page, "Allow access")
+	allow := namedButton(page, "Allow").Or(namedButton(page, "Allow access"))
 	if err := confirm.Or(allow).WaitFor(playwright.LocatorWaitForOptions{Timeout: ms(wait)}); err != nil {
 		return err
 	}
@@ -36,12 +36,12 @@ func clickAWS(ctx context.Context, page playwright.Page, wait time.Duration) err
 	if err := allow.Click(playwright.LocatorClickOptions{Timeout: ms(wait)}); err != nil {
 		return err
 	}
-	slog.Info("aws button clicked", slog.String("name", "Allow access"))
+	slog.Info("aws button clicked", slog.String("name", "Allow"))
 	return nil
 }
 
 func allowVisible(page playwright.Page) bool {
-	n, err := namedButton(page, "Confirm and continue").Or(namedButton(page, "Allow access")).Count()
+	n, err := namedButton(page, "Confirm and continue").Or(namedButton(page, "Allow")).Or(namedButton(page, "Allow access")).Count()
 	return err == nil && n > 0
 }
 
