@@ -29,6 +29,10 @@ func Test_Parse_allows_only_awsapps_device_login(t *testing.T) {
 		{name: "awsapps suffix trick rejected", in: "https://revelio.awsapps.com.evil.com/start/#/device?user_code=TEST-TEST", ok: false},
 		{name: "empty rejected", in: "   ", ok: false},
 		{name: "relative rejected", in: "/login", ok: false},
+		{name: "signin authorize", in: "https://us-east-2.signin.aws/platform/authorize?request_uri=urn:ietf:params:oauth:request_uri:abc&identitystore_id=d-9a6706643d", ok: true},
+		{name: "signin other path rejected", in: "https://us-east-2.signin.aws/platform/login?request_uri=urn:ietf:params:oauth:request_uri:abc&identitystore_id=d-9a6706643d", ok: false},
+		{name: "signin missing request rejected", in: "https://us-east-2.signin.aws/platform/authorize?identitystore_id=d-9a6706643d", ok: false},
+		{name: "signin suffix trick rejected", in: "https://us-east-2.signin.aws.evil.com/platform/authorize?request_uri=urn:ietf:params:oauth:request_uri:abc&identitystore_id=d-9a6706643d", ok: false},
 	}
 
 	for _, tt := range tests {

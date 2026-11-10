@@ -33,11 +33,22 @@ func clickAWS(ctx context.Context, page playwright.Page, wait time.Duration) err
 			slog.Info("aws button clicked", slog.String("name", "Confirm and continue"))
 		}
 	}
+	done := approved(page)
+	if err := allow.Or(done).WaitFor(playwright.LocatorWaitForOptions{Timeout: ms(wait)}); err != nil {
+		return err
+	}
+	if n, err := allow.Count(); err != nil || n == 0 {
+		return nil
+	}
 	if err := allow.Click(playwright.LocatorClickOptions{Timeout: ms(wait)}); err != nil {
 		return err
 	}
 	slog.Info("aws button clicked", slog.String("name", "Allow"))
 	return nil
+}
+
+func approved(page playwright.Page) playwright.Locator {
+	return page.GetByText("You can close this window").Or(page.GetByText("You can now close this tab"))
 }
 
 func allowVisible(page playwright.Page) bool {

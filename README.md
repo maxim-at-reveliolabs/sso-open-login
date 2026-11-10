@@ -65,7 +65,10 @@ Or, while it is running:
 echo 'https://revelio.awsapps.com/start/#/device?user_code=TEST-TEST' | nc -N 127.0.0.1 18201
 ```
 
-Only `https://*.awsapps.com/start/#/device?user_code=` URLs are opened. Other URLs are ignored.
+Only two `https` device-login URLs are opened. Other URLs are ignored.
+
+- `https://*.awsapps.com/start/#/device?user_code=`
+- `https://<region>.signin.aws/platform/authorize?request_uri=urn:ietf:params:oauth:request_uri:…&identitystore_id=d-…`
 
 ## First login
 

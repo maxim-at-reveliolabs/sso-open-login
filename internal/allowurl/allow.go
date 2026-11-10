@@ -37,7 +37,7 @@ func Parse(raw string) (URL, error) {
 	if host == "" {
 		return URL{}, fmt.Errorf("empty host: %w", ErrRejected)
 	}
-	if !deviceLogin(u, host) {
+	if !deviceLogin(u, host) && !signinAuthorize(u, host) {
 		return URL{}, fmt.Errorf("host %q: %w", host, ErrRejected)
 	}
 	return URL{raw: u.String(), code: userCode(u)}, nil
@@ -64,4 +64,16 @@ func deviceLogin(u *url.URL, host string) bool {
 	}
 	return strings.TrimSuffix(frag.Path, "/") == "/device" &&
 		strings.TrimSpace(frag.Query().Get("user_code")) != ""
+}
+
+func signinAuthorize(u *url.URL, host string) bool {
+	name, ok := strings.CutSuffix(host, ".signin.aws")
+	if !ok || name == "" || strings.Contains(name, ".") {
+		return false
+	}
+	if strings.TrimSuffix(u.Path, "/") != "/platform/authorize" {
+		return false
+	}
+	q := u.Query()
+	return q.Get("request_uri") != "" && q.Get("identitystore_id") != ""
 }

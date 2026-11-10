@@ -14,7 +14,7 @@ func granted(ctx context.Context, page playwright.Page) error {
 	if err := ctx.Err(); err != nil {
 		return err
 	}
-	loc := page.GetByText("You can close this window")
+	loc := approved(page)
 	if err := loc.First().WaitFor(playwright.LocatorWaitForOptions{Timeout: ms(45 * time.Second)}); err != nil {
 		saveShot(page, "fail.png")
 		slog.Error("aws grant did not finish")
